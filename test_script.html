@@ -1,67 +1,148 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Three.js Simple Cube</title>
+<html>
+  <head>
+    <title>Voxel Engine - Final Build</title>
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.2.0/dist/aframe-extras.min.js"></script>
     <style>
-        body { margin: 0; overflow: hidden; background-color: #000; }
-        canvas { display: block; }
+      body { margin: 0; overflow: hidden; background: #111; }
+      #ui {
+        position: absolute; top: 10px; left: 10px; color: white;
+        font-family: monospace; background: rgba(0,0,0,0.7); padding: 15px;
+        pointer-events: none; border-radius: 8px; border: 1px solid #444;
+      }
     </style>
-</head>
-<body>
-
-<script type="importmap">
-  {
-    "imports": {
-      "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
-    }
-  }
-</script>
-
-<script type="module">
-    import * as THREE from 'three';
-
-    // 1. Setup the Scene
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
+  </head>
+  <body>
+    <div id="ui">
+      <b>CONTROLS</b><br>
+      WASD : Move<br>
+      SPACE: Jump<br>
+      LEFT CLICK : Break<br>
+      RIGHT CLICK: Build
+    </div>
     
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    document.body.appendChild(renderer.domElement);
+    <script>
+      // 1. DATA STORAGE
+      let blockMap = {}; 
+      const getID = (x, y, z) => `${Math.round(x)},${Math.round(y)},${Math.round(z)}`;
 
-    // 2. Create the Entity (The Cube)
-    const geometry = new THREE.BoxGeometry(1, 1, 1);
-    const material = new THREE.MeshStandardMaterial({ color: 0x00ff88 });
-    const cube = new THREE.Mesh(geometry, material);
-    scene.add(cube);
+      // Generate Terrain
+      for (let x = 0; x < 20; x++) {
+        for (let z = 0; z < 20; z++) {
+          let y = Math.floor(Math.sin(x * 0.4) * 2 + Math.cos(z * 0.4) * 2);
+          blockMap[getID(x, y, z)] = { x, y, z };
+        }
+      }
 
-    // 3. Add Light (Ursina does this automatically, Three.js requires it)
-    const light = new THREE.DirectionalLight(0xffffff, 1);
-    light.position.set(1, 1, 2);
-    scene.add(light);
-    scene.add(new THREE.AmbientLight(0x404040)); // Soft white light
+      let velocityY = 0;
+      const gravity = -0.012;
+      const jumpStrength = 0.28;
+      let worldReady = false;
 
-    camera.position.z = 5;
+      AFRAME.registerComponent('voxel-world', {
+        init: function () {
+          this.renderWorld();
+          window.addEventListener('contextmenu', e => e.preventDefault());
 
-    // 4. The Update Loop (Ursina's update() function)
-    function animate() {
-        requestAnimationFrame(animate);
+          // Build/Break Logic
+          this.el.addEventListener('mousedown', (evt) => {
+            const intersect = evt.detail.intersection;
+            if (!intersect) return;
+            const pos = intersect.object.el.getAttribute('position');
+            
+            if (evt.detail.mouseEvent.button === 0) { // Left Click
+              delete blockMap[getID(pos.x, pos.y, pos.z)];
+            } else if (evt.detail.mouseEvent.button === 2) { // Right Click
+              const n = intersect.normal;
+              const newPos = { 
+                x: Math.round(pos.x + n.x), 
+                y: Math.round(pos.y + n.y), 
+                z: Math.round(pos.z + n.z) 
+              };
+              blockMap[getID(newPos.x, newPos.y, newPos.z)] = newPos;
+            }
+            this.renderWorld();
+          });
 
-        // Rotate the cube every frame
-        cube.rotation.x += 0.01;
-        cube.rotation.y += 0.01;
+          // Jump
+          window.addEventListener('keydown', e => {
+            if (e.code === 'Space' && Math.abs(velocityY) < 0.02) velocityY = jumpStrength;
+          });
 
-        renderer.render(scene, camera);
-    }
+          // Wait 500ms before enabling gravity
+          setTimeout(() => { worldReady = true; }, 500);
+        },
 
-    // Handle window resizing
-    window.addEventListener('resize', () => {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-    });
+        tick: function () {
+          if (!worldReady) return;
 
-    animate();
-</script>
-</body>
+          const rig = document.querySelector('#rig');
+          let pos = rig.getAttribute('position');
+
+          // Apply Gravity
+          velocityY += gravity;
+          pos.y += velocityY;
+
+          // FLOOR SCANNER (AABB / Raycast hybrid)
+          let px = Math.round(pos.x);
+          let pz = Math.round(pos.z);
+          let floorY = -20; // Default "void" depth
+
+          // Scan from current Y downwards to find the closest block
+          for (let yCheck = Math.round(pos.y); yCheck > -20; yCheck--) {
+            if (blockMap[getID(px, yCheck, pz)]) {
+              floorY = yCheck + 1.6; // 1.6 is the camera height offset
+              break;
+            }
+          }
+
+          // If we fall below the detected floor, snap to it
+          if (pos.y <= floorY) {
+            pos.y = floorY;
+            velocityY = 0;
+          }
+
+          rig.setAttribute('position', pos);
+        },
+
+        renderWorld: function () {
+          const scene = this.el;
+          // Efficiently clear old blocks
+          const oldBlocks = document.querySelectorAll('.voxel');
+          for(let i=0; i<oldBlocks.length; i++) {
+            oldBlocks[i].parentNode.removeChild(oldBlocks[i]);
+          }
+
+          Object.values(blockMap).forEach(b => {
+            let box = document.createElement('a-box');
+            box.setAttribute('position', `${b.x} ${b.y} ${b.z}`);
+            box.setAttribute('class', 'voxel');
+            // Height-based coloring
+            let color = b.y > 1 ? "#4da6ff" : (b.y > -1 ? "#4CAF50" : "#8B4513");
+            box.setAttribute('color', color);
+            box.setAttribute('scale', '0.98 0.98 0.98');
+            scene.appendChild(box);
+          });
+        }
+      });
+    </script>
+
+    <a-scene voxel-world shadow="type: basic">
+      <a-entity id="rig" movement-controls="speed: 0.2; fly: false" position="10 15 10">
+        <a-entity camera look-controls="pointerLockEnabled: true" position="0 1.6 0">
+          <a-entity cursor="rayOrigin: entity" 
+                    raycaster="objects: .voxel; far: 8" 
+                    position="0 0 -1"
+                    geometry="primitive: ring; radiusInner: 0.005; radiusOuter: 0.01"
+                    material="color: #FFF; shader: flat">
+          </a-entity>
+        </a-entity>
+      </a-entity>
+
+      <a-sky color="#1a1a1a"></a-sky>
+      <a-light type="ambient" intensity="0.6"></a-light>
+      <a-light type="directional" position="5 10 5" intensity="0.5"></a-light>
+    </a-scene>
+  </body>
 </html>
