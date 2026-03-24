@@ -1,41 +1,221 @@
 <!DOCTYPE html>
-<html>
-
-<style>
-  body {
-    background-color: #d9d9d9
-  }
-</style>
-
-
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* This sets the global background for the entire browser window */
+        html, body {
+            height: 100%;
+            margin: 0;
+            /* This matches the gray in your original image */
+            background-color: #d3d3d3; 
+        }
 
-<img src = "Trinity Sunrise.png" width = "300" height = "300">
+        body {
+            font-family: "Georgia", serif;
+            display: flex;
+            justify-content: center;
+            padding: 80px 20px;
+            color: #000000;
+        }
 
-<h1> Trinity Sunrise </h1>
+        .quote-container {
+            max-width: 800px;
+            /* No background-color here means it stays the same gray as the body */
+            width: 100%;
+        }
 
+        h1 {
+            text-align: center;
+            font-size: 2.8rem;
+            margin-bottom: 60px;
+            color: #333;
+            /* Optional: subtle divider like the image style */
+            border-bottom: 1px solid #b0b0b0;
+            padding-bottom: 20px;
+        }
+
+        .quote-block {
+            margin-bottom: 70px;
+        }
+
+        p.quote-text {
+            font-size: 1.4rem;
+            font-weight: bold;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .attribution {
+            text-align: right;
+            font-size: 1.1rem;
+            font-style: italic;
+            color: #000000;
+        }
+
+        .author {
+            font-weight: bold;
+            font-style: normal;
+        }
+
+        /* Styling for the links you had in your list */
+        a {
+            color: #674ea7;
+            text-decoration: underline;
+        }
+    </style>
 </head>
-
-
 <body>
 
-<h2> Short Quotes </h2>
+<div class="quote-container">
+    <h1> Government and Economics Quotebook</h1>
 
-<p> <b> "In proportion as you give the state power to do things for you, you give it power to do things to you." </b> Albert Jay Nock </p>
+    <div class="quote-block">
+        <p class="quote-text">"I know of no safe depository of the ultimate powers of the society but the people themselves."</p>
+        <p class="attribution"><span class="author">Thomas Jefferson</span></p>
+    </div>
 
-<p> <b> "There is never, nor can there be, any strengthening of State power without a corresponding and rougly equivalent depletion of social power." </b> Albert Jay Nock, <a href="https://mises.org/library/book/our-enemy-state"> <i> Our Enemy, the State </i> </a> </p>
+<div class="quote-block">
+        <p class="quote-text">"For as violations of the rights of the governed, are commonly not only specious, but small at the beginning, they spread over the multitude in such a manner, as to touch individuals but slightly. Thus they are disregarded."</p>
+        <p class="attribution"><span class="author">John Dickinson</span></p>
+    </div>
 
-<p> <b> "In republican government, the legislative authority necessarily predominates." </b> James Madison, <a href = "federalist51.html"> <i> Federalist No.51 </i> </a> </p>
+<div class="quote-block">
+        <p class="quote-text">"In proportion as you give the state power to do things for you, you give it power to do things to you."</p>
+        <p class="attribution"><span class="author">Albert Jay Nock</span></p>
+    </div>
 
-<p> <b> "The end of all good government is to cultivate humanity and promote the happiness of all, and the good of every man in all his rights, his life, liberty, estate, honor, etc., without injury or abuse done to any." </b> John Wise </p>
+    <div class="quote-block">
+        <p class="quote-text">"There is never, nor can there be, any strengthening of State power without a corresponding and roughly equivalent depletion of social power."</p>
+        <p class="attribution"><span class="author">Albert Jay Nock</span>, <a href="https://mises.org/library/book/our-enemy-state"><em>Our Enemy, the State</em></a></p>
+    </div>
 
-<p> <b> "Give me liberty or give me death!" </b> Patrick Henry </p>
+    <div class="quote-block">
+        <p class="quote-text">"In republican government, the legislative authority necessarily predominates."</p>
+        <p class="attribution"><span class="author">James Madison</span>, <em>Federalist No. 51</em></p>
+    </div>
 
-<p> <b> "The natural progress of things is for liberty to yield and government to gain ground." </b> Thomas Jefferson </p>
+<div class="quote-block">
+        <p class="quote-text">"The natural progress of things is for liberty to yield and government to gain ground."</p>
+        <p class="attribution"><span class="author">Thomas Jefferson</span></p>
+    </div>
 
-<p> <b> "That no government is to be submitted to, at the expense of that which is the sole end of all government,—the common good and safety of society." </b> Jonathan Mayhew </p>
+<div class="quote-block">
+        <p class="quote-text">"I can not find any authority in the Constitution for making the Federal government the great [dispenser] of public charity throughout the United States."</p>
+        <p class="attribution"><span class="author">Franklin Pierce</span></p>
+    </div>
+
+<div class="quote-block">
+        <p class="quote-text">"The best government is that which governs least."</p>
+        <p class="attribution"><span class="author">John L. O'Sullivan</span></p>
+    </div>
+    
+<div class="quote-block">
+        <p class="quote-text">"No government is to be submitted to, at the expense of that which is the sole end of all government—the common good and safety of society."</p>
+        <p class="attribution"><span class="author">Jonathan Mayhew</span></p>
+    </div>
+
+<div class="quote-block">
+        <p class="quote-text">"Every free state should incessantly watch, and instantly take alarm on any addition being made to the power exercised over them."</p>
+        <p class="attribution"><span class="author">John Dickinson</span></p>
+    </div>
+
+<div class="quote-block">
+        <p class="quote-text">"No one can or ought to be constrained to believe."
+</p>
+        <p class="attribution"><span class="author">Saint Augustine</span></p>
+    </div>
+
+<div class="quote-block">
+        <p class="quote-text">"Freedom is indivisible. As soon as one starts to restrict it, one enters upon a decline on which it is difficult to stop."</p>
+        <p class="attribution"><span class="author">Ludwig von Mises</span>, <a href="https://cdn.mises.org/Human%20Action_3.pdf"><em>Human Action: A Treatise on Economics</em></a></p>
+    </div>
+
+<div class="quote-block">
+        <p class="quote-text">"The end of all good government is to cultivate humanity and promote the happiness of all, and the good of every man in all his rights, his life, liberty, estate, honor, etc., without injury or abuse done to any."</p>
+        <p class="attribution"><span class="author">John Wise</span></p>
+    </div>
+
+<div class="quote-block">
+        <p class="quote-text">"We have no government armed with power capable of contending with human passions unbridled by morality and religion. Avarice, ambition, revenge or gallantry would break the strongest cords of our Constitution as a whale goes through a net. Our Constitution is designed only for a moral and religious people. It is wholly inadequate for any other."</p>
+        <p class="attribution"><span class="author">John Adams</span></p>
+    </div>
+
+<div class="quote-block">
+        <p class="quote-text">"It [the Judicial branch] may truly be said to have neither FORCE nor WILL, but merely judgment; and must ultimately depend upon the aid of the executive arm even for the efficacy of its judgments."</p>
+        <p class="attribution"><span class="author">Alexander Hamilton</span></p>
+    </div>
+
+  <div class="quote-block">
+        <p class="quote-text">"Ambition must be made to counteract ambition."</p>
+        <p class="attribution"><span class="author">James Madison</span>, <em>Federalist No. 51</em></p>
+    </div>
+
+<div class="quote-block">
+        <p class="quote-text">"The [Federal] government will operate like an ambuscade. It will destroy the state governments, and swallow the liberties of the people."</p>
+        <p class="attribution"><span class="author">Patrick Henry</span></p>
+    </div>
+
+<div class="quote-block">
+        <p class="quote-text">"If men were angels, no government would be necessary."</p>
+        <p class="attribution"><span class="author">James Madison</span>, <em>Federalist No. 51</em></p>
+    </div>
+
+<div class="quote-block">
+        <p class="quote-text">"We hold these truths to be self-evident, that all men are created equal, that they are endowed by their Creator with certain unalienable Rights, that among these are Life, Liberty and the pursuit of Happiness."</p>
+        <p class="attribution"><span class="author">Thomas Jefferson</span>, <em>Declaration of Independence</em></p>
+    </div>
+
+<div class="quote-block">
+        <p class="quote-text">"...[T]hat this nation, under God, shall have a new birth of freedom -- and that government of the people, by the people, for the people, shall not perish from the earth."</p>
+        <p class="attribution"><span class="author">Abraham Lincoln</span>, <em>Gettysburg Address</em></p>
+    </div>
+
+<div class="quote-block">
+        <p class="quote-text">"When a beggar asks us for a quarter, our instinct is to say that the State has already confiscated our quarter for his benefit, and he should go to the State about it."</p>
+        <p class="attribution"><span class="author">Albert Jay Nock</span>, <a href="https://mises.org/library/book/our-enemy-state"><em>Our Enemy, the State</em></a></p>
+    </div>
+
+<div class="quote-block">
+        <p class="quote-text">"It is easy to be conspicuously 'compassionate' if others are being forced to pay the cost."</p>
+        <p class="attribution"><span class="author">Murray Rothbard</span></p>
+    </div>
+
+<div class="quote-block">
+        <p class="quote-text">"The people are turbulent and changing; they seldom judge or determine right."</p>
+        <p class="attribution"><span class="author">Alexander Hamilton</span></p>
+    </div>
+
+<div class="quote-block">
+        <p class="quote-text">"Restoration of the federal republic will not in itself solve all our problems because the ends of human life do not rest in government..."</p>
+        <p class="attribution"><span class="author">Clyde Wilson</span></p>
+    </div>
+
+<div class="quote-block">
+        <p class="quote-text">"[Congress] really has inaugurated a plan primarily designed to destroy private obligations, repudiate national debts, and drive into the treasury all the gold in the country in exchange for inconvertible promises to pay of much less value....The constitution is gone."</p>
+        <p class="attribution"><span class="author">James C. McReynolds</span></p>
+    </div>
+
+<div class="quote-block">
+        <p class="quote-text">"We Americans have been corrupted by the goodies handed out by government, and prefer them greatly to the strict construction of the Constitution."</p>
+        <p class="attribution"><span class="author">Clarence B. Carson</span></p>
+    </div>
+
+<div class="quote-block">
+        <p class="quote-text">"I wonder how many such men in America would know that Communism, the New Deal, Fascism, Nazism, are merely so-many trade-names for collectivist Statism, like the trade-names for tooth-pastes which are all exactly alike except for the flavouring."</p>
+        <p class="attribution"><span class="author">Albert Jay Nock</span></p>
+    </div>
+
+<div class="quote-block">
+        <p class="quote-text">"A paper system [currency] has no natural limitations. Expanded and contracted at the will of speculators, it subjects the business of the country to the exploitation of the money brokers."</p>
+        <p class="attribution"><span class="author">John Taylor</span></p>
+    </div>
+
+
+    
+    </div>
+
 
 </body>
-
-
-<html>
+</html>
