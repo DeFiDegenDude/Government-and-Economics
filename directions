@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* This sets the global background for the entire browser window */
+        html, body {
+            height: 100%;
+            margin: 0;
+            background-color: #674ea7; 
+        }
+
+        body {
+            font-family: "Georgia", serif;
+            display: flex;
+            justify-content: center;
+            padding: 80px 20px;
+            color: #E6E6FA;
+        }
+
+        .quote-container {
+            max-width: 800px;
+            width: 100%;
+        }
+
+        /* Navigation Styling */
+        .footer-links {
+            text-align: center;
+            margin-top: 50px;
+            padding-bottom: 40px;
+        }
+
+        .footer-links a {
+            margin: 0 20px;
+            font-variant: small-caps;
+            font-size: 1rem;
+            text-decoration: none;
+            color: #E6E6FA;
+        }
+
+        .footer-links a:hover {
+            color: #BDB5D5;
+        }
+    </style>
+</head>
+<body>
+
+<div class="quote-container">
+    <div class="footer-links">
+        <a href="index.html">Home</a>
+        <a href="libertarian.html">Libertarian</a>
+        <a href="socialist.html">Socialist</a>
+        <a href="#">Credits</a>
+    </div>
+</div>
+
+</body>
+</html>
