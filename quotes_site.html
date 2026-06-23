@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Government & Economics Quotebook</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#f9f7f2;--surface:#fff;--border:#e2ddd4;--text:#1a1a18;--muted:#6b6860;
+    --accent:#4a3f2f;--tag-bg:#f0ebe0;--tag-txt:#5a4e3a;--gold:#8a7040;
+  }
+  @media(prefers-color-scheme:dark){
+    :root{--bg:#1a1917;--surface:#252320;--border:#3a3730;--text:#e8e4dc;--muted:#8a8680;
+    --accent:#c9a96e;--tag-bg:#2e2b24;--tag-txt:#b8a880;--gold:#c9a96e;}
+  }
+  body{font-family:Georgia,'Times New Roman',serif;background:var(--bg);color:var(--text);min-height:100vh;padding:0}
+  header{border-bottom:1px solid var(--border);padding:2rem 2rem 1.5rem;background:var(--surface)}
+  header h1{font-size:1.6rem;font-weight:normal;letter-spacing:.03em;color:var(--accent)}
+  header p{font-size:.85rem;color:var(--muted);margin-top:.4rem;font-family:system-ui,sans-serif}
+  .controls{padding:1rem 2rem;background:var(--surface);border-bottom:1px solid var(--border);display:flex;flex-wrap:wrap;gap:.75rem;align-items:center}
+  .search-wrap{position:relative;flex:1;min-width:180px}
+  .search-wrap input{width:100%;padding:.5rem .75rem .5rem 2rem;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-size:.875rem;font-family:system-ui,sans-serif;outline:none}
+  .search-wrap input:focus{border-color:var(--gold)}
+  .search-wrap::before{content:'🔍';position:absolute;left:.6rem;top:.55rem;font-size:.75rem;pointer-events:none}
+  select{padding:.5rem .75rem;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-size:.875rem;font-family:system-ui,sans-serif;cursor:pointer;outline:none}
+  select:focus{border-color:var(--gold)}
+  .btn{padding:.5rem 1rem;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--muted);font-size:.8rem;font-family:system-ui,sans-serif;cursor:pointer;white-space:nowrap}
+  .btn:hover{border-color:var(--gold);color:var(--accent)}
+  .count{font-size:.8rem;color:var(--muted);font-family:system-ui,sans-serif;margin-left:auto;align-self:center}
+  .tags{display:flex;flex-wrap:wrap;gap:.4rem;padding:.75rem 2rem;border-bottom:1px solid var(--border);background:var(--surface)}
+  .tag{padding:.25rem .65rem;border-radius:12px;font-size:.75rem;font-family:system-ui,sans-serif;cursor:pointer;background:var(--tag-bg);color:var(--tag-txt);border:1px solid transparent;transition:all .15s}
+  .tag:hover,.tag.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .grid{padding:1.5rem 2rem;display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1rem}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.25rem 1.5rem;display:flex;flex-direction:column;gap:.75rem;transition:border-color .15s}
+  .card:hover{border-color:var(--gold)}
+  .card blockquote{font-size:.95rem;line-height:1.7;color:var(--text);font-style:italic;border-left:3px solid var(--gold);padding-left:.85rem}
+  .card-footer{display:flex;justify-content:space-between;align-items:flex-end;gap:.5rem}
+  .author{font-size:.8rem;font-family:system-ui,sans-serif;color:var(--accent);font-weight:500}
+  .source{font-size:.75rem;font-family:system-ui,sans-serif;color:var(--muted);margin-top:.15rem}
+  .card-tags{display:flex;flex-wrap:wrap;gap:.3rem}
+  .card-tag{padding:.15rem .5rem;border-radius:10px;font-size:.7rem;font-family:system-ui,sans-serif;background:var(--tag-bg);color:var(--tag-txt)}
+  .copy-btn{padding:.3rem .5rem;border:1px solid var(--border);border-radius:5px;background:transparent;color:var(--muted);font-size:.7rem;font-family:system-ui,sans-serif;cursor:pointer;flex-shrink:0}
+  .copy-btn:hover{border-color:var(--gold);color:var(--accent)}
+  .empty{grid-column:1/-1;text-align:center;padding:3rem;color:var(--muted);font-family:system-ui,sans-serif;font-size:.9rem}
+  @media(max-width:600px){.grid{grid-template-columns:1fr;padding:1rem}.controls,.tags{padding:.75rem 1rem}header{padding:1.25rem 1rem}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Government &amp; Economics Quotebook</h1>
+  <p>Western political thought &amp; classical economics</p>
+</header>
+<div class="controls">
+  <div class="search-wrap"><input type="text" id="search" placeholder="Search quotes, authors…" oninput="filter()"></div>
+  <select id="authorFilter" onchange="filter()">
+    <option value="">All authors</option>
+  </select>
+  <button class="btn" onclick="random()">Random quote</button>
+  <span class="count" id="count"></span>
+</div>
+<div class="tags" id="themeTags"></div>
+<div class="grid" id="grid"></div>
+
+<script>
+const Q=[
+  {text:"We have tried spending money. We are spending more money than we have ever spent before and it does not work. … I want to see this country prosperous. I want to see people get a job, I want to see people get enough to eat. We have never made good on our promises. … I say after eight years of this administration we have just as much unemployment as when we started and an enormous debt to boot!",author:"Henry Morgenthau Jr.",source:"Former Secretary of the Treasury under FDR",themes:["government","economics","debt"]},
+  {text:"I know of no safe depository of the ultimate powers of the society but the people themselves.",author:"Thomas Jefferson",source:"",themes:["liberty","government","democracy"]},
+  {text:"For as violations of the rights of the governed, are commonly not only specious, but small at the beginning, they spread over the multitude in such a manner, as to touch individuals but slightly. Thus they are disregarded.",author:"John Dickinson",source:"",themes:["liberty","rights","tyranny"]},
+  {text:"In proportion as you give the state power to do things for you, you give it power to do things to you.",author:"Albert Jay Nock",source:"",themes:["liberty","government","power"]},
+  {text:"Sometimes it is said that man cannot be trusted with the government of himself. Can he, then, be trusted with the government of others? Or have we found angels in the forms of kings to govern him? Let history answer this question.",author:"Thomas Jefferson",source:"First Inaugural Address",themes:["liberty","government","democracy"]},
+  {text:"In republican government, the legislative authority necessarily predominates.",author:"James Madison",source:"Federalist No. 51",themes:["government","constitution","democracy"]},
+  {text:"The natural progress of things is for liberty to yield and government to gain ground.",author:"Thomas Jefferson",source:"",themes:["liberty","government","tyranny"]},
+  {text:"I can not find any authority in the Constitution for making the Federal government the great dispenser of public charity throughout the United States.",author:"Franklin Pierce",source:"",themes:["constitution","government","economics"]},
+  {text:"The best government is that which governs least.",author:"John L. O'Sullivan",source:"",themes:["government","liberty"]},
+  {text:"The citizens of the United States cherish sentiments the most friendly, in favor of the liberty and happiness of their fellow men on that side of the Atlantic. In the wars of the European powers, in matters relating to themselves, we have never taken any part, nor does it comport with our policy to do so. It is only when our rights are invaded, or seriously menaced, that we resent injuries, or make preparation for our defense.",author:"James Monroe",source:"Monroe Doctrine",themes:["liberty","rights","foreign policy"]},
+  {text:"No government is to be submitted to, at the expense of that which is the sole end of all government—the common good and safety of society.",author:"Jonathan Mayhew",source:"",themes:["government","democracy"]},
+  {text:"Every free state should incessantly watch, and instantly take alarm on any addition being made to the power exercised over them.",author:"John Dickinson",source:"",themes:["liberty","tyranny","government"]},
+  {text:"No one can or ought to be constrained to believe.",author:"Saint Augustine",source:"",themes:["liberty","rights"]},
+  {text:"Freedom is indivisible. As soon as one starts to restrict it, one enters upon a decline on which it is difficult to stop.",author:"Ludwig von Mises",source:"Human Action: A Treatise on Economics",themes:["liberty","economics"]},
+  {text:"The end of all good government is to cultivate humanity and promote the happiness of all, and the good of every man in all his rights, his life, liberty, estate, honor, etc., without injury or abuse done to any.",author:"John Wise",source:"",themes:["government","liberty","rights"]},
+  {text:"There are no necessary evils in government. Its evils exist only in its abuses. If it would confine itself to equal protection, and, as Heaven does its rains, shower its favors alike on the high and the low, the rich and the poor, it would be an unqualified blessing.",author:"Andrew Jackson",source:"",themes:["government","rights","equality"]},
+  {text:"We have no government armed with power capable of contending with human passions unbridled by morality and religion. Avarice, ambition, revenge or gallantry would break the strongest cords of our Constitution as a whale goes through a net. Our Constitution is designed only for a moral and religious people. It is wholly inadequate for any other.",author:"John Adams",source:"",themes:["constitution","government","morality"]},
+  {text:"It may truly be said to have neither FORCE nor WILL, but merely judgment; and must ultimately depend upon the aid of the executive arm even for the efficacy of its judgments.",author:"Alexander Hamilton",source:"Referring to the Judicial branch",themes:["constitution","government","law"]},
+  {text:"Ambition must be made to counteract ambition.",author:"James Madison",source:"Federalist No. 51",themes:["government","constitution","power"]},
+  {text:"For as in absolute governments the king is law, so in free countries the law ought to be king; and there ought to be no other.",author:"Thomas Paine",source:"Common Sense",themes:["liberty","law","tyranny"]},
+  {text:"Equal justice under law can be achieved only if the legal structure is simplified and made accessible to all people, if the courts are limited to the resolution of conflicts and disputes within their capacity to decide, and if the aim of justice is to treat similarly situated individuals equally is adhered to.",author:"Lois G. Forer",source:"The Death of the Law",themes:["law","rights","equality"]},
+  {text:"The Federal government will operate like an ambuscade. It will destroy the state governments, and swallow the liberties of the people.",author:"Patrick Henry",source:"",themes:["government","liberty","tyranny"]},
+  {text:"If men were angels, no government would be necessary.",author:"James Madison",source:"Federalist No. 51",themes:["government","constitution"]},
+  {text:"We hold these truths to be self-evident, that all men are created equal, that they are endowed by their Creator with certain unalienable Rights, that among these are Life, Liberty and the pursuit of Happiness.",author:"Thomas Jefferson",source:"Declaration of Independence",themes:["liberty","rights","equality","democracy"]},
+  {text:"…that this nation, under God, shall have a new birth of freedom—and that government of the people, by the people, for the people, shall not perish from the earth.",author:"Abraham Lincoln",source:"Gettysburg Address",themes:["liberty","democracy","government"]},
+  {text:"It is easy to be conspicuously 'compassionate' if others are being forced to pay the cost.",author:"Murray Rothbard",source:"",themes:["economics","liberty","government"]},
+  {text:"The people are turbulent and changing; they seldom judge or determine right.",author:"Alexander Hamilton",source:"",themes:["democracy","government"]},
+  {text:"Restoration of the federal republic will not in itself solve all our problems because the ends of human life do not rest in government.",author:"Clyde Wilson",source:"",themes:["government","liberty"]},
+  {text:"Congress really has inaugurated a plan primarily designed to destroy private obligations, repudiate national debts, and drive into the treasury all the gold in the country in exchange for inconvertible promises to pay of much less value… The constitution is gone.",author:"James C. McReynolds",source:"",themes:["constitution","economics","debt"]},
+  {text:"We Americans have been corrupted by the goodies handed out by government, and prefer them greatly to the strict construction of the Constitution.",author:"Clarence B. Carson",source:"",themes:["government","constitution","liberty"]},
+  {text:"I wonder how many such men in America would know that Communism, the New Deal, Fascism, Nazism, are merely so-many trade-names for collectivist Statism, like the trade-names for tooth-pastes which are all exactly alike except for the flavouring.",author:"Albert Jay Nock",source:"",themes:["government","liberty","tyranny"]},
+  {text:"A paper system of currency has no natural limitations. Expanded and contracted at the will of speculators, it subjects the business of the country to the exploitation of the money brokers.",author:"John Taylor",source:"",themes:["economics","debt","markets"]},
+  {text:"Still one thing more fellow-citizens—a wise and frugal Government, which shall restrain men from injuring one another, shall leave them otherwise free to regulate their own pursuits of industry and improvement, and shall not take from the mouth of labor the bread it has earned. This is the sum of good government, and this is necessary to close the circle of our felicities.",author:"Thomas Jefferson",source:"First Inaugural Address",themes:["government","liberty","economics"]}
+];
+
+const allThemes=[...new Set(Q.flatMap(q=>q.themes))].sort();
+const allAuthors=[...new Set(Q.map(q=>q.author))].sort();
+let activeTheme='';
+
+const sel=document.getElementById('authorFilter');
+allAuthors.forEach(a=>{const o=document.createElement('option');o.value=a;o.textContent=a;sel.appendChild(o);});
+
+const tagDiv=document.getElementById('themeTags');
+allThemes.forEach(t=>{
+  const el=document.createElement('span');
+  el.className='tag';el.textContent=t;
+  el.onclick=()=>{activeTheme=activeTheme===t?'':t;document.querySelectorAll('.tag').forEach(x=>x.classList.toggle('active',x.textContent===activeTheme));filter();};
+  tagDiv.appendChild(el);
+});
+
+function filter(){
+  const q=document.getElementById('search').value.toLowerCase();
+  const a=document.getElementById('authorFilter').value;
+  const shown=Q.filter(x=>{
+    const matchQ=!q||x.text.toLowerCase().includes(q)||x.author.toLowerCase().includes(q);
+    const matchA=!a||x.author===a;
+    const matchT=!activeTheme||x.themes.includes(activeTheme);
+    return matchQ&&matchA&&matchT;
+  });
+  render(shown);
+}
+
+function render(list){
+  const g=document.getElementById('grid');
+  document.getElementById('count').textContent=list.length+' quote'+(list.length!==1?'s':'');
+  if(!list.length){g.innerHTML='<div class="empty">No quotes match your search.</div>';return;}
+  g.innerHTML=list.map((q,i)=>`
+    <div class="card">
+      <blockquote>${q.text}</blockquote>
+      <div class="card-footer">
+        <div>
+          <div class="author">— ${q.author}</div>
+          ${q.source?`<div class="source">${q.source}</div>`:''}
+        </div>
+        <button class="copy-btn" onclick="copy(${Q.indexOf(q)},this)">Copy</button>
+      </div>
+      <div class="card-tags">${q.themes.map(t=>`<span class="card-tag">${t}</span>`).join('')}</div>
+    </div>
+  `).join('');
+}
+
+function copy(i,btn){
+  const q=Q[i];
+  navigator.clipboard.writeText(`"${q.text}" — ${q.author}${q.source?', '+q.source:''}`);
+  const old=btn.textContent;btn.textContent='Copied!';setTimeout(()=>btn.textContent=old,1500);
+}
+
+function random(){
+  document.getElementById('search').value='';
+  document.getElementById('authorFilter').value='';
+  activeTheme='';
+  document.querySelectorAll('.tag').forEach(x=>x.classList.remove('active'));
+  const r=Q[Math.floor(Math.random()*Q.length)];
+  render([r]);
+}
+
+render(Q);
+document.getElementById('count').textContent=Q.length+' quotes';
+</script>
+</body>
+</html>
